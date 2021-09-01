@@ -1,48 +1,38 @@
 import { data } from 'browserslist';
+import axios from 'axios';
 import React from 'react';
 import './App.css';
 
 class App extends React.Component {
 
 state = {
-  data :[{
-    login: "ehsan2793",
-    id: 84936400,
-    node_id: "MDQ6VXNlcjg0OTM2NDAw",
-    avatar_url: "https://avatars.githubusercontent.com/u/84936400?v=4",
-    gravatar_id: "",
-    url: "https://api.github.com/users/ehsan2793",
-    html_url: "https://github.com/ehsan2793",
-    followers_url: "https://api.github.com/users/ehsan2793/followers",
-    following_url: "https://api.github.com/users/ehsan2793/following{/other_user}",
-    gists_url: "https://api.github.com/users/ehsan2793/gists{/gist_id}",
-    starred_url: "https://api.github.com/users/ehsan2793/starred{/owner}{/repo}",
-    subscriptions_url: "https://api.github.com/users/ehsan2793/subscriptions",
-    organizations_url: "https://api.github.com/users/ehsan2793/orgs",
-    repos_url: "https://api.github.com/users/ehsan2793/repos",
-    events_url: "https://api.github.com/users/ehsan2793/events{/privacy}",
-    received_events_url: "https://api.github.com/users/ehsan2793/received_events",
-    type: "User",
-    site_admin: false,
-    name: "Ehsan Rahimi",
-    company: null,
-    blog: "",
-    location: "California ",
-    email: null,
-    hireable: null,
-    bio: null,
-    twitter_username: null,
-    public_repos: 41,
-    public_gists: 0,
-    followers: 1,
-    following: 1,
-    created_at: "2021-05-27T19:41:56Z",
-    updated_at: "2021-08-31T15:53:10Z"
-    }]
+  data : [],
+  input : 'arsalan2243',
+}
+
+componentDidMount() {
+  axios.get('https://api.github.com/users/ehsan2793')
+  .then(response => {this.setState({data: [response.data]})})
+  .catch(error => console.error('error'));
 }
 
 
+handleSubmit = (event) => {
+  event.preventDefault();
+  axios.get(`https://api.github.com/users/${this.state.input}`)
+  .then(response => {this.setState(
+    {data:[response.data]})})
+    .catch(error => console.log(error))
 
+}
+handleChange = (event) => {
+const {name, value} = event.target;
+this.setState({
+[name]: value
+
+})
+
+}
 
 
   render() {
@@ -55,8 +45,8 @@ state = {
           <div>
             <h1>Welcome to Github Card</h1>
             <p>this is the place where you can find your github card</p>
-            <form>
-              <input placeholder="write name here"/>
+            <form onSubmit={this.handleSubmit}>
+              <input onChange={this.handleChange} name="input" value={this.state.input} type="text"placeholder="type your github login"/>
               <button>click</button>
             </form>
 
@@ -68,7 +58,7 @@ state = {
                 <img width="300" height="300"src={item['avatar_url']}/>
               </div>
               <div className="textContiner">
-                  <p>Name: {item.name} </p>
+                  <p>Name: {(item.name !== null)?`${item.name}` : 'no name' } </p>
                   <p>Login: {item.login} </p>
                   <p>Id: {item.id} </p>
                   <p>Number of Folloers: {item.followers}  </p>
